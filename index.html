@@ -32,15 +32,12 @@
     min-height:100vh;
     position:relative;
   }
-  /* Matrix canvas */
   #matrix{position:fixed;inset:0;z-index:0;opacity:.35;pointer-events:none}
-  /* Scanlines */
   body::before{
     content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
     background:repeating-linear-gradient(to bottom,rgba(0,255,102,.04) 0,rgba(0,255,102,.04) 1px,transparent 1px,transparent 3px);
     mix-blend-mode:overlay;
   }
-  /* Vignette */
   body::after{
     content:"";position:fixed;inset:0;z-index:1;pointer-events:none;
     background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.85) 100%);
@@ -111,6 +108,636 @@
   .hero-info h2{
     font-family:'Orbitron';font-weight:900;font-size:22px;color:#fff;letter-spacing:1.5px;
     text-shadow:0 0 10px var(--neon);
+  }
+  .hero-info .glitch{position:relative;display:inline-block}
+  .hero-info .tag{color:var(--neon);font-size:12px;letter-spacing:1.2px;margin-top:4px;display:block}
+  .hero-info p{color:var(--muted);font-size:12px;margin-top:8px;line-height:1.5}
+
+  /* ===== TELEGRAM BUTTONS ===== */
+  .tg-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .tg-btn{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:999px;font-size:11px;font-weight:600;
+    text-decoration:none;color:#02060a;background:var(--neon);
+    box-shadow:0 0 14px rgba(0,255,102,.6);
+    transition:.2s;letter-spacing:.5px;
+  }
+  .tg-btn.alt{background:var(--neon3);box-shadow:0 0 14px rgba(0,212,255,.6)}
+  .tg-btn:hover{transform:translateY(-2px) scale(1.04)}
+
+  /* ===== CHAT ===== */
+  .chat-shell{
+    margin-top:18px;border:1px solid var(--border);border-radius:18px;
+    background:var(--panel);backdrop-filter:blur(10px);
+    box-shadow:0 0 40px rgba(0,255,102,.1);
+    overflow:hidden;display:flex;flex-direction:column;height:62vh;min-height:420px;
+  }
+  .chat-header{
+    padding:10px 14px;border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(180deg,rgba(0,255,102,.1),transparent);
+    font-family:'Orbitron';font-size:12px;letter-spacing:1.5px;color:var(--neon);
+  }
+  .chat-header .left{display:flex;align-items:center;gap:8px}
+  .chat-header svg{width:14px;height:14px;fill:var(--neon)}
+  .chat-actions{display:flex;gap:6px}
+  .chat-actions button{
+    background:transparent;border:1px solid var(--border);color:var(--neon);
+    font-family:inherit;font-size:10px;padding:4px 8px;border-radius:8px;cursor:pointer;letter-spacing:1px;
+    transition:.2s;
+  }
+  .chat-actions button:hover{background:rgba(0,255,102,.12);box-shadow:0 0 10px rgba(0,255,102,.4)}
+
+  .chat-body{flex:1;overflow-y:auto;padding:14px;scroll-behavior:smooth}
+  .chat-body::-webkit-scrollbar{width:6px}
+  .chat-body::-webkit-scrollbar-thumb{background:var(--neon);border-radius:6px}
+
+  .msg{margin-bottom:12px;max-width:88%;animation:in .35s ease}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .msg.user{margin-left:auto}
+  .msg.bot{margin-right:auto}
+  .bubble{
+    padding:10px 14px;border-radius:14px;font-size:13.5px;line-height:1.55;
+    white-space:pre-wrap;word-wrap:break-word;
+  }
+  .msg.user .bubble{
+    background:linear-gradient(135deg,var(--neon),#00b34a);color:#02060a;
+    border-bottom-right-radius:4px;font-weight:600;
+    box-shadow:0 0 14px rgba(0,255,102,.4);
+  }
+  .msg.bot .bubble{
+    background:rgba(0,30,18,.85);color:var(--text);
+    border:1px solid var(--border);border-bottom-left-radius:4px;
+    box-shadow:inset 0 0 18px rgba(0,255,102,.06);
+  }
+  .msg .meta{font-size:10px;color:var(--muted);margin-top:4px;padding:0 4px}
+  .msg.user .meta{text-align:right}
+
+  /* ===== CODE BLOCK WITH COPY BUTTON ===== */
+  .code-wrap{
+    position:relative;
+    background:#000;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-top:10px;
+    overflow:hidden;
+  }
+  .code-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:6px 12px;
+    background:rgba(0,255,102,.08);
+    border-bottom:1px solid var(--border);
+    font-size:10px;
+    color:var(--muted);
+    letter-spacing:1px;
+    text-transform:uppercase;
+    font-family:'Orbitron',monospace;
+  }
+  .code-copy-btn{
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--neon);
+    width:28px;height:28px;
+    border-radius:6px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:.2s;
+    padding:0;
+  }
+  .code-copy-btn:hover{
+    background:rgba(0,255,102,.15);
+    box-shadow:0 0 10px rgba(0,255,102,.5);
+    transform:scale(1.05);
+  }
+  .code-copy-btn svg{width:14px;height:14px;fill:var(--neon)}
+  .code-copy-btn.copied{
+    background:var(--neon);
+    color:#02060a;
+  }
+  .code-copy-btn.copied svg{fill:#02060a}
+  .bubble pre{
+    background:transparent;
+    border:0;
+    border-radius:0;
+    padding:12px;
+    margin:0;
+    overflow-x:auto;
+    font-size:12px;
+    color:var(--neon);
+  }
+  .bubble pre::-webkit-scrollbar{height:6px}
+  .bubble pre::-webkit-scrollbar-thumb{background:var(--neon);border-radius:6px}
+  .bubble code{font-family:'Share Tech Mono',monospace}
+
+  /* Inline copy for short text */
+  .inline-copy{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    background:rgba(0,255,102,.08);
+    border:1px solid var(--border);
+    padding:2px 8px;
+    border-radius:6px;
+    font-size:11px;
+    cursor:pointer;
+    color:var(--neon);
+    transition:.2s;
+  }
+  .inline-copy:hover{background:rgba(0,255,102,.18)}
+
+  /* typing */
+  .typing{display:inline-flex;gap:4px;align-items:center;padding:6px 0}
+  .typing span{width:6px;height:6px;border-radius:50%;background:var(--neon);animation:bounce 1s infinite}
+  .typing span:nth-child(2){animation-delay:.15s}
+  .typing span:nth-child(3){animation-delay:.3s}
+  @keyframes bounce{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+  /* ===== INSERT BOX (Multi-line preview area) ===== */
+  .insert-box{
+    margin:10px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:rgba(0,30,18,.5);
+    overflow:hidden;
+    position:relative;
+    transition:.3s;
+  }
+  .insert-box:focus-within{
+    border-color:var(--neon);
+    box-shadow:0 0 14px rgba(0,255,102,.3);
+  }
+  .insert-box-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+    background:rgba(0,255,102,.05);
+  }
+  .insert-box-header .label{
+    font-family:'Orbitron',monospace;
+    font-size:10px;
+    color:var(--neon);
+    letter-spacing:1.5px;
+  }
+  .insert-btn{
+    background:linear-gradient(135deg,var(--neon),#00b34a);
+    color:#02060a;
+    border:0;
+    padding:5px 14px;
+    border-radius:6px;
+    font-family:'Orbitron',monospace;
+    font-weight:700;
+    font-size:11px;
+    letter-spacing:1px;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(0,255,102,.5);
+    transition:.2s;
+  }
+  .insert-btn:hover{transform:translateY(-1px) scale(1.04);box-shadow:0 0 18px rgba(0,255,102,.7)}
+  .insert-btn:active{transform:scale(.98)}
+  .insert-textarea{
+    width:100%;
+    min-height:60px;
+    max-height:180px;
+    background:transparent;
+    border:0;
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    padding:10px 12px;
+    resize:vertical;
+    outline:none;
+    line-height:1.5;
+  }
+  .insert-textarea::placeholder{color:var(--muted);opacity:.7}
+
+  /* input */
+  .chat-input{
+    display:flex;gap:8px;padding:10px;border-top:1px solid var(--border);
+    background:linear-gradient(180deg,transparent,rgba(0,255,102,.04));
+  }
+  .chat-input input{
+    flex:1;background:#000;border:1px solid var(--border);color:var(--text);
+    padding:12px 14px;border-radius:12px;font-family:inherit;font-size:13px;outline:none;
+    transition:.2s;
+  }
+  .chat-input input:focus{border-color:var(--neon);box-shadow:0 0 14px rgba(0,255,102,.4)}
+  .chat-input input::placeholder{color:var(--muted)}
+  .chat-input button{
+    background:var(--neon);color:#02060a;border:0;padding:0 16px;border-radius:12px;
+    font-family:'Orbitron';font-weight:700;letter-spacing:1px;cursor:pointer;font-size:12px;
+    box-shadow:0 0 14px rgba(0,255,102,.6);transition:.2s;
+  }
+  .chat-input button:hover{transform:translateY(-2px) scale(1.03)}
+  .chat-input button:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+  /* suggestions */
+  .suggest{display:flex;gap:6px;overflow-x:auto;padding:8px 10px;border-top:1px solid var(--border);scrollbar-width:none}
+  .suggest::-webkit-scrollbar{display:none}
+  .suggest button{
+    flex-shrink:0;background:rgba(0,255,102,.08);border:1px solid var(--border);
+    color:var(--neon);padding:6px 10px;border-radius:999px;font-size:11px;cursor:pointer;
+    font-family:inherit;transition:.2s;white-space:nowrap;
+  }
+  .suggest button:hover{background:rgba(0,255,102,.18)}
+
+  /* Toast */
+  .toast{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%) translateY(100px);
+    background:var(--neon);
+    color:#02060a;
+    padding:10px 20px;
+    border-radius:999px;
+    font-family:'Orbitron',monospace;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:1px;
+    box-shadow:0 0 24px rgba(0,255,102,.7);
+    z-index:9999;
+    opacity:0;
+    transition:.4s cubic-bezier(.34,1.56,.64,1);
+    pointer-events:none;
+  }
+  .toast.show{
+    transform:translateX(-50%) translateY(0);
+    opacity:1;
+  }
+
+  /* ===== FOOTER PROMO ===== */
+  .promo{
+    margin-top:14px;padding:14px;border:1px dashed var(--border);border-radius:14px;
+    background:rgba(0,30,18,.4);text-align:center;font-size:12px;line-height:1.7;
+  }
+  .promo b{color:var(--neon);font-family:'Orbitron'}
+  .promo a{color:var(--neon3);text-decoration:none;font-weight:700}
+  .promo a:hover{text-shadow:0 0 8px var(--neon3)}
+
+  .credit{
+    margin-top:18px;text-align:center;font-size:11px;color:var(--muted);
+    letter-spacing:1.5px;font-family:'Orbitron';
+  }
+  .credit b{color:var(--neon);text-shadow:0 0 6px var(--neon)}
+
+  .glitch{animation:glitch 4s infinite}
+  @keyframes glitch{
+    0%,90%,100%{text-shadow:0 0 10px var(--neon)}
+    92%{text-shadow:2px 0 var(--neon2),-2px 0 var(--neon3)}
+    94%{text-shadow:-2px 0 var(--neon2),2px 0 var(--neon3)}
+  }
+
+  @media(max-width:520px){
+    .hero{grid-template-columns:100px 1fr;padding:12px}
+    .avatar{width:100px;height:100px}
+    .hero-info h2{font-size:18px}
+    .brand h1{font-size:15px}
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="wrap">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"><span>K</span></div>
+      <div>
+        <h1 class="glitch">KAWSAR&nbsp;AI</h1>
+        <small>// PREMIUM HACKING LAUNCHER v2.0</small>
+      </div>
+    </div>
+    <div class="status">
+      <span class="dot"></span><span>ONLINE</span>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="avatar">
+      <img src="YOUR_BASE64_IMAGE_HERE" alt="Kawsar - Developer" />
+    </div>
+    <div class="hero-info">
+      <h2 class="glitch">&gt; KAWSAR_</h2>
+      <span class="tag">[ AI DEVELOPER • CYBER SECURITY • FOUNDER ]</span>
+      <p>Welcome to <b style="color:var(--neon)">KAWSAR AI</b> — an advanced AI assistant built for hackers, developers &amp; tech enthusiasts. Ask anything, in any language.</p>
+      <div class="tg-row">
+        <a class="tg-btn" href="https://t.me/HostBDSupport" target="_blank" rel="noopener">
+          ✈ Contact: @HostBDSupport
+        </a>
+        <a class="tg-btn alt" href="https://t.me/mobilhackbykawsar" target="_blank" rel="noopener">
+          📡 Join Channel
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAT -->
+  <section class="chat-shell">
+    <div class="chat-header">
+      <div class="left">
+        <svg viewBox="0 0 24 24"><path d="M12 2L1 7l11 5 9-4.09V17h2V7M5 13.18v4L12 21l7-3.82v-4L12 17z"/></svg>
+        <span>NEURAL TERMINAL</span>
+      </div>
+      <div class="chat-actions">
+        <button id="clearBtn">CLEAR</button>
+        <button id="copyBtn">COPY ALL</button>
+      </div>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+      <div class="msg bot">
+        <div class="bubble">👋 <b>Hello! I'm KAWSAR AI.</b>
+
+আমি বাংলা এবং ইংরেজি দুই ভাষাতেই উত্তর দিতে পারি। কোডিং, হ্যাকিং টুলস, সাইবার সিকিউরিটি — যেকোনো প্রশ্ন করতে পারেন।
+
+I can speak both Bengali and English. Ask me anything about coding, hacking tools, or cyber security.
+
+🔥 <b>নতুন নতুন জিনিস পেতে আমার চ্যানেলে জয়েন করেন:</b> <a href="https://t.me/mobilhackbykawsar" target="_blank" style="color:var(--neon3)">@mobilhackbykawsar</a>
+🔥 <b>Join my channel for the latest updates:</b> @mobilhackbykawsar</div>
+        <div class="meta">KAWSAR AI • just now</div>
+      </div>
+    </div>
+
+    <!-- ===== INSERT BOX (NEW) ===== -->
+    <div class="insert-box">
+      <div class="insert-box-header">
+        <span class="label">📝 INSERT MESSAGE</span>
+        <button class="insert-btn" id="insertBtn">Insert</button>
+      </div>
+      <textarea 
+        class="insert-textarea" 
+        id="insertTextarea" 
+        placeholder="এখানে লিখুন... (যেমন: এই index.html GitHub এ push...)"
+      ></textarea>
+    </div>
+
+    <div class="suggest" id="suggest">
+      <button>Who created you?</button>
+      <button>তুমি কে?</button>
+      <button>Write a Python keylogger concept</button>
+      <button>Explain SQL injection</button>
+      <button>Linux basic commands</button>
+      <button>Best hacking tools 2025</button>
+    </div>
+
+    <form class="chat-input" id="chatForm" autocomplete="off">
+      <input id="userInput" type="text" placeholder="> Type your command..." required />
+      <button type="submit" id="sendBtn">SEND</button>
+    </form>
+  </section>
+
+  <!-- PROMO -->
+  <div class="promo">
+    🚀 <b>নতুন নতুন জিনিস পেতে আমার চ্যানেলে জয়েন করেন</b> →
+    <a href="https://t.me/mobilhackbykawsar" target="_blank">@mobilhackbykawsar</a><br/>
+    🚀 <b>Join my channel for the latest tools &amp; updates</b> →
+    <a href="https://t.me/mobilhackbykawsar" target="_blank">@mobilhackbykawsar</a><br/>
+    💬 <b>Contact:</b> <a href="https://t.me/HostBDSupport" target="_blank">@HostBDSupport</a>
+  </div>
+
+  <div class="credit">
+    &lt;/&gt; CRAFTED BY <b>KAWSAR</b> • &copy; <span id="yr"></span>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">✓ COPIED!</div>
+
+<script>
+/* ===== MATRIX RAIN ===== */
+(function(){
+  const c=document.getElementById('matrix'),ctx=c.getContext('2d');
+  let w,h,cols,drops;
+  function resize(){
+    w=c.width=window.innerWidth;
+    h=c.height=window.innerHeight;
+    cols=Math.floor(w/14);
+    drops=Array(cols).fill(1);
+  }
+  resize();window.addEventListener('resize',resize);
+  const chars='ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉ01010ABCDEF#$@';
+  function draw(){
+    ctx.fillStyle='rgba(0,4,2,0.08)';
+    ctx.fillRect(0,0,w,h);
+    ctx.font='14px Share Tech Mono';
+    for(let i=0;i<drops.length;i++){
+      const t=chars[Math.floor(Math.random()*chars.length)];
+      ctx.fillStyle=Math.random()>.97?'#fff':'#00ff66';
+      ctx.fillText(t,i*14,drops[i]*14);
+      if(drops[i]*14>h&&Math.random()>.975)drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw,55);
+})();
+
+/* ===== TOAST ===== */
+const toast=document.getElementById('toast');
+function showToast(msg='✓ COPIED!'){
+  toast.textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),1800);
+}
+
+/* ===== COPY HELPERS ===== */
+function copyText(text, btn){
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>onCopySuccess(btn));
+  } else {
+    // Fallback
+    const ta=document.createElement('textarea');
+    ta.value=text;
+    ta.style.position='fixed';ta.style.left='-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try{document.execCommand('copy');onCopySuccess(btn);}catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+function onCopySuccess(btn){
+  showToast('✓ COPIED!');
+  if(btn){
+    btn.classList.add('copied');
+    const old=btn.innerHTML;
+    btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      btn.innerHTML=old;
+    },1500);
+  }
+}
+
+/* ===== CHAT LOGIC ===== */
+const API='https://dark-ai.lmnx9.workers.dev?sukhi=';
+const body=document.getElementById('chatBody');
+const form=document.getElementById('chatForm');
+const input=document.getElementById('userInput');
+const sendBtn=document.getElementById('sendBtn');
+document.getElementById('yr').textContent=new Date().getFullYear();
+
+const PROMO_BN='\n\n🔥 নতুন নতুন জিনিস পেতে আমার চ্যানেলে জয়েন করেন: @mobilhackbykawsar';
+const PROMO_EN='\n🔥 Join my channel for the latest updates: @mobilhackbykawsar';
+
+const COPY_ICON_SVG='<svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';
+
+function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+function fmt(text){
+  let t=escapeHTML(text);
+  // code blocks ```lang\n...```  -> wrapped with copy button
+  t=t.replace(/```(\w+)?\n?([\s\S]*?)```/g,(_,lang,code)=>{
+    const language=(lang||'code').toUpperCase();
+    const cleanCode=code.trim();
+    const encoded=encodeURIComponent(cleanCode);
+    return `<div class="code-wrap">
+      <div class="code-header">
+        <span>${language}</span>
+        <button class="code-copy-btn" data-code="${encoded}" title="Copy code">${COPY_ICON_SVG}</button>
+      </div>
+      <pre><code>${cleanCode}</code></pre>
+    </div>`;
+  });
+  // inline code
+  t=t.replace(/`([^`]+)`/g,'<code style="background:#000;padding:2px 6px;border-radius:4px;color:var(--neon)">$1</code>');
+  // bold
+  t=t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+  // links
+  t=t.replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" style="color:var(--neon3)">$1</a>');
+  // mentions
+  t=t.replace(/@mobilhackbykawsar/g,'<a href="https://t.me/mobilhackbykawsar" target="_blank" style="color:var(--neon3);font-weight:700">@mobilhackbykawsar</a>');
+  t=t.replace(/@HostBDSupport/g,'<a href="https://t.me/HostBDSupport" target="_blank" style="color:var(--neon3);font-weight:700">@HostBDSupport</a>');
+  return t;
+}
+
+function timeNow(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
+
+function addMsg(role,text,opts={}){
+  const div=document.createElement('div');
+  div.className='msg '+role;
+  div.innerHTML=`<div class="bubble">${opts.raw?text:fmt(text)}</div><div class="meta">${role==='user'?'YOU':'KAWSAR AI'} • ${timeNow()}</div>`;
+  body.appendChild(div);
+  body.scrollTop=body.scrollHeight;
+  return div;
+}
+
+function typingIndicator(){
+  const div=document.createElement('div');
+  div.className='msg bot';
+  div.id='typing';
+  div.innerHTML=`<div class="bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  body.appendChild(div);
+  body.scrollTop=body.scrollHeight;
+  return div;
+}
+
+async function askAI(q){
+  const lower=q.toLowerCase().trim();
+  const idQ=['who made you','who created you','who built you','who are you','your creator','your developer','তুমি কে','তোমাকে কে বানিয়েছে','তোমার নাম কি','তোমার ডেভলপার কে'];
+  if(idQ.some(k=>lower.includes(k.toLowerCase()))){
+    return `আমি **KAWSAR AI** — একটি প্রিমিয়াম হ্যাকিং AI অ্যাসিস্ট্যান্ট। আমাকে তৈরি করেছেন **KAWSAR** (AI Developer & Founder)।\n\nI am **KAWSAR AI** — a premium hacking AI assistant. I was created by **KAWSAR** (AI Developer & Founder).\n\n💬 Contact: @HostBDSupport`+PROMO_BN+PROMO_EN;
+  }
+
+  const url=API+encodeURIComponent(q);
+  const r=await fetch(url);
+  if(!r.ok) throw new Error('Network error: '+r.status);
+  const data=await r.json();
+  let msg=data.message||data.response||data.reply||JSON.stringify(data);
+
+  if(!sessionStorage.getItem('promoShown') || Math.random()<0.35){
+    msg+=PROMO_BN+PROMO_EN;
+    sessionStorage.setItem('promoShown','1');
+  }
+  return msg;
+}
+
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const q=input.value.trim();
+  if(!q) return;
+  addMsg('user',q);
+  input.value='';
+  sendBtn.disabled=true;
+  const t=typingIndicator();
+  try{
+    const a=await askAI(q);
+    t.remove();
+    addMsg('bot',a);
+  }catch(err){
+    t.remove();
+    addMsg('bot','⚠️ Connection error: '+err.message+'\nPlease try again or contact @HostBDSupport');
+  }finally{
+    sendBtn.disabled=false;
+    input.focus();
+  }
+});
+
+document.getElementById('suggest').addEventListener('click',e=>{
+  if(e.target.tagName==='BUTTON'){
+    input.value=e.target.textContent;
+    form.requestSubmit();
+  }
+});
+
+document.getElementById('clearBtn').addEventListener('click',()=>{
+  if(confirm('Clear chat history?')){
+    body.innerHTML='';
+    addMsg('bot',"Chat cleared. Ready for new commands.\n\nচ্যাট পরিষ্কার হয়েছে। নতুন কমান্ডের জন্য প্রস্তুত।"+PROMO_BN);
+  }
+});
+
+document.getElementById('copyBtn').addEventListener('click',()=>{
+  const txt=[...body.querySelectorAll('.bubble')].map(b=>b.innerText).join('\n\n---\n\n');
+  copyText(txt);
+});
+
+/* ===== CODE BLOCK COPY (event delegation) ===== */
+body.addEventListener('click',e=>{
+  const btn=e.target.closest('.code-copy-btn');
+  if(!btn) return;
+  const code=decodeURIComponent(btn.dataset.code||'');
+  copyText(code, btn);
+});
+
+/* ===== INSERT BOX FUNCTIONALITY ===== */
+const insertBtn=document.getElementById('insertBtn');
+const insertTextarea=document.getElementById('insertTextarea');
+
+insertBtn.addEventListener('click',()=>{
+  const text=insertTextarea.value.trim();
+  if(!text){
+    showToast('⚠️ Please type something!');
+    insertTextarea.focus();
+    return;
+  }
+  // Display the inserted text as a user message in chat
+  addMsg('user',text);
+  insertTextarea.value='';
+  showToast('✓ INSERTED!');
+});
+
+// Allow Ctrl+Enter / Cmd+Enter to insert
+insertTextarea.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){
+    e.preventDefault();
+    insertBtn.click();
+  }
+});
+
+input.focus();
+</script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>    text-shadow:0 0 10px var(--neon);
   }
   .hero-info .glitch{position:relative;display:inline-block}
   .hero-info .tag{color:var(--neon);font-size:12px;letter-spacing:1.2px;margin-top:4px;display:block}
